@@ -1,0 +1,154 @@
+Metadata-Version: 2.4
+Name: fairml
+Version: 0.1.0
+Summary: Bias Detection and Mitigation Toolkit for Responsible AI
+Home-page: https://github.com/nik21hil/fairml
+Author: Nikhil Singh
+Author-email: nik21hil@gmail.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: numpy
+Requires-Dist: pandas
+Requires-Dist: scikit-learn
+Requires-Dist: matplotlib
+Requires-Dist: seaborn
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license-file
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# fairml
+
+**Bias Detection and Mitigation Toolkit for Responsible AI**
+
+---
+
+## 📝 **Overview**
+
+`fairml` is a Python package designed to help data scientists and machine learning engineers **detect, visualize, and mitigate bias** in datasets and models seamlessly.
+
+With intuitive APIs, rich visualizations, and practical mitigation techniques, `fairml` makes fairness-aware AI development accessible to every practitioner.
+
+---
+
+## ⚡ **Key Features**
+
+✅ Bias detection metrics  
+✅ Bias visualization dashboards  
+✅ Pre-processing and post-processing mitigation methods  
+✅ scikit-learn compatible pipelines  
+✅ Lightweight, modular, and extensible design
+
+---
+
+## 💻 **Installation**
+
+```
+pip install fairml
+```
+
+*(Currently under development; install via GitHub for now)*
+
+```
+pip install git+https://github.com/nik21hil/fairml.git
+```
+
+---
+
+## 🚀 **Quickstart**
+
+```
+from fairml import detection
+
+# Example: Calculate Statistical Parity Difference
+spd = detection.statistical_parity_difference(y_true, y_pred, sensitive_features)
+print("Statistical Parity Difference:", spd)
+```
+
+More detailed examples and notebooks are available in the `examples/` folder.
+
+---
+
+## 📊 **Modules**
+
+- `detection.py`: Bias detection metrics  
+- `visualization.py`: Fairness visualizations and plots  
+- `mitigation.py`: Bias mitigation algorithms  
+- `utils.py`: Helper functions
+
+---
+
+## 📁 **Project Structure**
+
+```
+fairml/
+│
+├── fairml/
+│   ├── detection.py
+│   ├── visualization.py
+│   ├── mitigation.py
+│   ├── utils.py
+│
+├── examples/
+├── tests/
+├── setup.py
+├── pyproject.toml
+├── requirements.txt
+├── README.md
+├── LICENSE
+└── .gitignore
+```
+
+---
+
+## ✅ **Roadmap**
+
+- [x] Phase 0: Project setup  
+- [ ] Phase 1: Core bias detection metrics  
+- [ ] Phase 2: Visualization module  
+- [ ] Phase 3: Pre-processing mitigation techniques  
+- [ ] Phase 4: Post-processing mitigation techniques  
+- [ ] Phase 5: End-to-end example notebooks  
+- [ ] Phase 6: PyPI release
+
+---
+
+## 🤝 **Contributing**
+
+Contributions are welcome. Please open an issue or pull request to discuss improvements, features, or bug fixes.
+
+---
+
+## 📄 **License**
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## ✨ **Acknowledgements**
+
+- IBM AI Fairness 360  
+- Microsoft Fairlearn  
+- The broader AI fairness and ethics research community
+
+---
+
+## 🌐 **Author**
+
+**Nikhil Singh**  
+[GitHub](https://github.com/nik21hil) | [LinkedIn](https://www.linkedin.com/in/nikhil-singh21/)
+
+---
+
