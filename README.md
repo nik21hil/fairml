@@ -24,13 +24,13 @@ With intuitive APIs, rich visualizations, and practical mitigation techniques, `
 
 ## 💻 **Installation**
 
-```
+```bash
 pip install fairml
 ```
 
 *(Currently under development; install via GitHub for now)*
 
-```
+```bash
 pip install git+https://github.com/nik21hil/fairml.git
 ```
 
@@ -42,7 +42,7 @@ pip install git+https://github.com/nik21hil/fairml.git
 from fairml import detection
 
 # Example: Calculate Statistical Parity Difference
-spd = detection.statistical_parity_difference(y_pred, sensitive_features, privileged_group='A', unprivileged_group='B')
+spd = detection.statistical_parity_difference(y_true, y_pred, sensitive_features)
 print("Statistical Parity Difference:", spd)
 ```
 
@@ -59,58 +59,72 @@ More detailed examples and notebooks are available in the `examples/` folder.
 
 ---
 
-## 🔧 **Fairness Mitigation Utilities**
+## 🧰 **Mitigation Techniques**
 
-The `mitigation` module includes several techniques to reduce class imbalance and improve fairness.
+The `fairml.mitigation` module offers multiple pre-processing techniques to handle class imbalance and fairness-aware reweighting:
 
-### ✅ Supported Methods
-
-| Method                       | Type           | Description                                                                 |
-|-----------------------------|----------------|-----------------------------------------------------------------------------|
-| `apply_smote`               | Over-sampling  | Generates synthetic minority samples using k-nearest neighbors             |
-| `apply_adasyn`              | Over-sampling  | Focuses more on hard-to-learn minority samples                             |
-| `combined_resample`         | Combo          | Combines `SMOTE` with `Tomek Links` for noise reduction                    |
-| `apply_cluster_centroids`   | Under-sampling | Replaces majority class samples with cluster centroids using KMeans       |
-
----
-
-## 🧪 **Usage Examples**
+### 🔄 Reweighting
 
 ```python
-from fairml.mitigation import (
-    apply_smote,
-    apply_adasyn,
-    combined_resample,
-    apply_cluster_centroids
-)
+from fairml.mitigation import reweight_samples
 
-# Sample imbalanced data
-X = pd.DataFrame({'f1': range(30)})
-y = np.array([0] * 25 + [1] * 5)
-
-# SMOTE
-X_sm, y_sm = apply_smote(X, y)
-
-# ADASYN
-X_ad, y_ad = apply_adasyn(X, y)
-
-# SMOTE + Tomek Links
-X_comb, y_comb = combined_resample(X, y, strategy='smote_tomek')
-
-# Cluster Centroids
-X_cc, y_cc = apply_cluster_centroids(X, y)
+weights = reweight_samples(y, sensitive_features, privileged_group='M', unprivileged_group='F')
 ```
 
----
+### ⚖️ Resampling by Group
 
-### 🛠 **When to Use What?**
+```python
+from fairml.mitigation import resample_dataset
 
-| Scenario                                | Recommended Method     |
-|----------------------------------------|------------------------|
-| Moderate imbalance                     | `apply_smote`          |
-| Imbalance + noisy boundaries           | `combined_resample`    |
-| Focus on harder minority examples      | `apply_adasyn`         |
-| Overwhelming majority class size       | `apply_cluster_centroids` |
+X_res, y_res, group_res = resample_dataset(X, y, sensitive_features,
+                                           privileged_group='M',
+                                           unprivileged_group='F',
+                                           strategy='undersample')  # or 'oversample'
+```
+
+### 🔬 Synthetic Sampling Techniques
+
+- **SMOTE**
+
+```python
+from fairml.mitigation import apply_smote
+
+X_res, y_res = apply_smote(X, y)
+```
+
+- **ADASYN**
+
+```python
+from fairml.mitigation import apply_adasyn
+
+X_res, y_res = apply_adasyn(X, y)
+```
+
+- **Hybrid Sampling (SMOTE + RandomUnderSampler)**
+
+```python
+from fairml.mitigation import apply_hybrid_sampling
+
+X_res, y_res = apply_hybrid_sampling(X, y)
+```
+
+- **Combined Sampling**
+
+```python
+from fairml.mitigation import combined_resample
+
+X_res, y_res = combined_resample(X, y, strategy='smote_tomek')  # or 'smote_enn'
+```
+
+- **Cluster Centroids (Under-sampling)**
+
+```python
+from fairml.mitigation import apply_cluster_centroids
+
+X_res, y_res = apply_cluster_centroids(X, y)
+```
+
+These techniques help create a balanced dataset before training, reducing unfair bias in imbalanced classes.
 
 ---
 
@@ -143,7 +157,7 @@ fairml/
 - [x] Phase 1: Core bias detection metrics  
 - [x] Phase 2: Visualization module  
 - [x] Phase 3: Pre-processing mitigation techniques  
-- [x] Phase 4: Post-processing mitigation techniques  
+- [ ] Phase 4: Post-processing mitigation techniques  
 - [ ] Phase 5: End-to-end example notebooks  
 - [ ] Phase 6: PyPI release
 
