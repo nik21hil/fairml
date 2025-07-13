@@ -1,5 +1,10 @@
 import numpy as np
 import pandas as pd
+from imblearn.over_sampling import SMOTE, ADASYN
+from imblearn.under_sampling import RandomUnderSampler
+from imblearn.pipeline import Pipeline
+from imblearn.combine import SMOTETomek, SMOTEENN
+
 
 def reweight_samples(y, sensitive_features, privileged_group, unprivileged_group):
     """
@@ -74,6 +79,72 @@ def resample_dataset(X, y, sensitive_features, privileged_group, unprivileged_gr
         df_balanced['label'].values,
         df_balanced['group'].values
     )
+
+
+def apply_smote(X, y, k_neighbors=5):
+    sm = SMOTE(k_neighbors=k_neighbors, random_state=42)
+    X_res, y_res = sm.fit_resample(X, y)
+    return X_res, y_res
+
+def apply_adasyn(X, y, n_neighbors=5):
+    ad = ADASYN(n_neighbors=n_neighbors, random_state=42)
+    X_res, y_res = ad.fit_resample(X, y)
+    return X_res, y_res
+
+def apply_hybrid_sampling(X, y, smote_k_neighbors=5, under_sampling_strategy='auto'):
+    """
+    Apply hybrid sampling (SMOTE + Random UnderSampling) to balance the dataset.
+    
+    Parameters:
+    - X: Features (DataFrame)
+    - y: Labels (array-like)
+    - smote_k_neighbors: Number of neighbors for SMOTE (default=5)
+    - under_sampling_strategy: Strategy for under-sampling majority class (default='auto')
+    
+    Returns:
+    - X_resampled, y_resampled: Resampled features and labels
+    """
+    over = SMOTE(k_neighbors=smote_k_neighbors, random_state=42)
+    under = RandomUnderSampler(sampling_strategy=under_sampling_strategy, random_state=42)
+    steps = [('o', over), ('u', under)]
+    pipeline = Pipeline(steps=steps)
+    X_res, y_res = pipeline.fit_resample(X, y)
+    return X_res, y_res
+
+
+def combined_resample(X, y, strategy='smote_tomek', random_state=42):
+    """
+    Apply combined resampling techniques to address class imbalance.
+
+    Parameters:
+        X (pd.DataFrame): Feature matrix.
+        y (np.array): Target array.
+        strategy (str): Strategy to use - 'smote_tomek' or 'smote_enn'.
+        random_state (int): Random state for reproducibility.
+
+    Returns:
+        X_resampled, y_resampled
+    """
+    smote = SMOTE(random_state=random_state, k_neighbors=3)
+    if strategy == 'smote_tomek':
+        sampler = SMOTETomek(random_state=random_state, smote=smote)
+    elif strategy == 'smote_enn':
+        sampler = SMOTEENN(random_state=random_state, smote=smote)
+    else:
+        raise ValueError("Invalid strategy. Choose 'smote_tomek' or 'smote_enn'.")
+
+    X_res, y_res = sampler.fit_resample(X, y)
+    return X_res, y_res
+
+
+
+
+
+
+
+
+
+
 
 
 
