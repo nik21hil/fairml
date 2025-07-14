@@ -1,34 +1,61 @@
+import numpy as np
+import pandas as pd
 import pytest
-from fairml.visualization import (
-    plot_group_metric_bar,
-    plot_fairness_tradeoff,
-    plot_pre_post_comparison
-)
+import matplotlib
 
-def test_plot_group_metric_bar():
-    group_names = ['Male', 'Female']
-    metric_values = [0.8, 0.6]
-    try:
-        plot_group_metric_bar(group_names, metric_values, metric_name='TPR')
-    except Exception as e:
-        pytest.fail(f"plot_group_metric_bar raised an exception: {e}")
+# Use non-interactive backend for testing
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 
-def test_plot_fairness_tradeoff():
-    fairness_scores = [0.1, 0.3, 0.5]
-    accuracy_scores = [0.92, 0.89, 0.86]
-    labels = ['Base', 'Weighting', 'Resampling']
-    try:
-        plot_fairness_tradeoff(fairness_scores, accuracy_scores, labels)
-    except Exception as e:
-        pytest.fail(f"plot_fairness_tradeoff raised an exception: {e}")
+from fairml import visualization
 
-def test_plot_pre_post_comparison():
-    metrics_before = [0.4, 0.6]
-    metrics_after = [0.2, 0.3]
-    metric_names = ['SPD', 'DIR']
-    try:
-        plot_pre_post_comparison(metrics_before, metrics_after, metric_names)
-    except Exception as e:
-        pytest.fail(f"plot_pre_post_comparison raised an exception: {e}")
+
+@pytest.fixture
+def dummy_data():
+    y_true = np.array([1, 0, 1, 0, 1, 1, 0, 0])
+    y_pred = np.array([1, 0, 0, 0, 1, 1, 1, 0])
+    sensitive = np.array(['A', 'A', 'B', 'B', 'A', 'B', 'A', 'B'])
+    return y_true, y_pred, sensitive
+
+
+def test_plot_group_metrics(dummy_data):
+    y_true, y_pred, sensitive = dummy_data
+    visualization.plot_group_metrics(y_true, y_pred, sensitive)
+    plt.close()
+
+
+def test_plot_fairness_grid():
+    df = pd.DataFrame({
+        'method': ['SMOTE', 'ADASYN', 'Reweighting'],
+        'SPD': [0.1, -0.2, 0.0],
+        'accuracy': [0.85, 0.82, 0.88]
+    })
+    visualization.plot_fairness_grid(df, fairness_metric='SPD', accuracy_col='accuracy')
+    plt.close()
+
+
+def test_plot_disparity_flow():
+    y_true_b = np.array([1, 0, 1, 0])
+    y_pred_b = np.array([1, 0, 1, 0])
+    y_true_a = np.array([1, 0, 1, 0])
+    y_pred_a = np.array([0, 1, 1, 0])
+    sensitive = np.array(['A', 'A', 'B', 'B'])
+    visualization.plot_disparity_flow(y_true_b, y_pred_b, y_true_a, y_pred_a, sensitive)
+    plt.close()
+
+
+def test_plot_threshold_impact():
+    thresholds = np.linspace(0.1, 0.9, 9)
+    spd_values = np.random.uniform(-0.2, 0.2, size=9)
+    visualization.plot_threshold_impact(thresholds, spd_values, metric_name="SPD")
+    plt.close()
+
+
+def test_plot_metric_dashboard(dummy_data):
+    y_true, y_pred, sensitive = dummy_data
+    visualization.plot_metric_dashboard(y_true, y_pred, sensitive, privileged_group='A',
+                                        unprivileged_group='B')
+    plt.close()
+
 
 
