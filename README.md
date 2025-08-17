@@ -186,4 +186,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🌐 **Author**
 
 **Nikhil Singh**  
-[GitHub](https://github.com/nik21hil) | [LinkedIn](https://www.linkedin.com/in/nikhil-singh21/)
+[GitHub](https://github.com/nik21hil) | [LinkedIn](https://www.linkedin.com/in/nkhlsngh/)
+
+---
+
+Enjoy building! 🎯
