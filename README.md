@@ -1,10 +1,8 @@
-# fairml
-
-**Bias Detection and Mitigation Toolkit for Responsible AI**
-
+# Fairml
+> Bias Detection and Mitigation Toolkit for Responsible AI.
 ---
 
-## 📝 **Overview**
+## ✨ **Overview**
 
 `fairml` is a Python package designed to help data scientists and machine learning engineers **detect, visualize, and mitigate bias** in datasets and models seamlessly.
 
